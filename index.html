@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just쇼핑몰 - 공식 웹사이트</title>
+    
+    <!-- 
+      [로컬 환경 분할 가이드 - CSS]
+      아래 <style> 태그 안의 내용만 전부 복사하여 'style.css' 파일로 저장하세요.
+      저장 후 이 index.html 헤더에 <link rel="stylesheet" href="style.css"> 를 추가하고
+      현재의 <style>~</style> 블록은 삭제하시면 분리가 완료됩니다.
+    -->
+    <style>
+        /* 기본 리셋 및 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* 헤더 영역 스타일 */
+        header {
+            background-color: #FF7B6B; /* 원본 도면 코랄 핑크 */
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 96px;
+        }
+
+        /* 로고 스타일 (Glassmorphism 원리 적용) */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            cursor: pointer;
+        }
+
+        .logo-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 16px;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo-just {
+            color: #0047FF;
+            font-size: 28px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+
+        .logo-mall {
+            color: #0A1172;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        /* 네비게이션 및 아코디언 서브메뉴 */
+        nav {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            padding: 0 32px;
+        }
+
+        .menu-list {
+            display: flex;
+            width: 600px;
+            justify-content: space-between;
+            list-style: none;
+            position: relative;
+        }
+
+        .menu-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 32px 0;
+            cursor: pointer;
+        }
+
+        .menu-item > a {
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .menu-item:hover > a {
+            color: #FF7B6B;
+        }
+
+        /* 아코디언 드롭다운 컨테이너 (실제 부드러운 높이 애니메이션 반영) */
+        .submenu-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 3px solid #FF7B6B;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+            z-index: 50;
+        }
+
+        .menu-item:hover .submenu-container {
+            max-height: 250px;
+            opacity: 1;
+        }
+
+        .submenu-list {
+            list-style: none;
+            padding: 8px 0;
+        }
+
+        .submenu-list li {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .submenu-list li:hover {
+            background-color: rgba(255, 123, 107, 0.1);
+            color: #FF7B6B;
+        }
+
+        /* 메인 영역 및 슬라이더 */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 24px auto;
+            flex-grow: 1;
+            padding: 0 16px;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            background-color: #111827;
+        }
+
+        .slide-item {
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+        }
+
+        .slide-item.active {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        .slide-title-box {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .slide-title-box h2 {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .event-badge-btn {
+            position: absolute;
+            bottom: 40px;
+            left: 48px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            padding: 16px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-badge-btn:hover {
+            transform: scale(1.05);
+            background: #000000;
+        }
+
+        .event-badge-btn span {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .event-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #FF7B6B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        /* 슬라이드 화살표 및 도트 버튼 */
+        .slide-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 20;
+        }
+
+        .slide-arrow:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .arrow-left { left: 16px; }
+        .arrow-right { right: 16px; }
+
+        .slide-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: #ffffff;
+        }
+
+        /* 콘텐츠 3분할 레이아웃 및 카드 디자인 (Glassmorphism & Translucent) */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 공지사항 / 갤러리 탭 구성 */
+        .tab-header {
+            display: flex;
+            border-bottom: 2px solid rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #FF7B6B;
+            color: #ffffff;
+        }
+
+        .tab-button.inactive {
+            background-color: rgba(0,0,0,0.03);
+            color: #6b7280;
+        }
+
+        .tab-button.inactive:hover {
+            background-color: rgba(0,0,0,0.07);
+        }
+
+        .tab-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .notice-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .notice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .notice-item:hover {
+            color: #FF7B6B;
+        }
+
+        .notice-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 16px;
+            font-weight: 500;
+        }
+
+        .notice-date {
+            color: #9ca3af;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* 갤러리 그리드 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .gallery-box {
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            height: 112px;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-cover: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        /* 이미지 배너 및 바로가기 공통 스타일 */
+        .image-banner {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+        }
+
+        .image-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+
+        .image-banner:hover::after {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .banner-btn-wrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .action-button {
+            background: #FF7B6B;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 800;
+            padding: 14px 28px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: scale(1.08);
+            background: #ff5c47;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #000000;
+            color: #d1d5db;
+            width: 100%;
+            padding: 32px 0;
+            border-top: 1px solid #1f2937;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .footer-logo {
+            border: 1px solid #374151;
+            padding: 6px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-logo:hover {
+            opacity: 1;
+        }
+
+        .f-logo-just {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            font-style: italic;
+        }
+
+        .f-logo-mall {
+            color: #9ca3af;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .sns-wrap {
+            display: flex;
+            gap: 12px;
+        }
+
+        .sns-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .sns-btn:hover {
+            transform: translateY(-4px);
+        }
+
+        .sns-fb { background-color: #3b5998; }
+        .sns-fb:hover { background-color: #2d4373; }
+        .sns-tw { background-color: #1da1f2; }
+        .sns-tw:hover { background-color: #0c85d0; }
+        .sns-ig { background: linear-gradient(to top right, #f9ce34, #ee2a7b, #6228d7); }
+        .sns-ig:hover { filter: brightness(1.1); }
+
+        /* 모달 팝업 구조 스타일 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 24px;
+            max-width: 448px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.05);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #4b5563;
+        }
+
+        .modal-body {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-line;
+            margin-bottom: 24px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .modal-confirm-btn {
+            background-color: #FF7B6B;
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 10px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-confirm-btn:hover {
+            background-color: #ff5c47;
+        }
+
+        /* 반응형 스타일 조정 */
+        @media (max-width: 1024px) {
+            .header-container {
+                flex-direction: column;
+                height: auto;
+            }
+            nav {
+                width: 100%;
+                justify-content: center;
+            }
+            .menu-list {
+                width: 100%;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .slider-wrapper {
+                height: 300px;
+            }
+            .footer-container {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+    </style>
+    
+    <!-- 폰트어썸 (SNS 아이콘 등 구현용 외부 리소스) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 구글 웹폰트 추가 적용 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 헤더 영역 -->
+    <header>
+        <div class="header-container">
+            <!-- 브랜드 로고 -->
+            <div class="logo-area" onclick="location.reload();">
+                <div class="logo-box">
+                    <span class="logo-just">Just</span>
+                    <span class="logo-mall">쇼핑몰</span>
+                </div>
+            </div>
+
+            <!-- 메인 메뉴 네비게이션 -->
+            <nav>
+                <ul class="menu-list">
+                    <!-- 탑 카테고리 -->
+                    <li class="menu-item">
+                        <a href="#">탑</a>
+                        <div class="submenu-container">
+                            <ul class="submenu-list">
+                                <li onclick="triggerMenuAction('반팔티')">반팔티</li>
+                                <li onclick="triggerMenuAction('긴팔티')">긴팔티</li>
+                                <li onclick="triggerMenuAction('셔츠/남방')">셔츠/남방</li>
+                                <li onclick="triggerMenuAction('후드/맨투맨')">후드/맨투맨</li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- 아우터 카테고리 -->
+                    <li class="menu-item">
+                        <a href="#">아우터</a>
+                        <div class="submenu-container">
+                            <ul class="submenu-list">
+                                <li onclick="triggerMenuAction('가디건')">가디건</li>
+                                <li onclick="triggerMenuAction('자켓')">자켓</li>
+                                <li onclick="triggerMenuAction('코트')">코트</li>
+                                <li onclick="triggerMenuAction('점퍼/패딩')">점퍼/패딩</li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- 팬츠 카테고리 -->
+                    <li class="menu-item">
+                        <a href="#">팬츠</a>
+                        <div class="submenu-container">
+                            <ul class="submenu-list">
+                                <li onclick="triggerMenuAction('청바지')">청바지</li>
+                                <li onclick="triggerMenuAction('슬랙스')">슬랙스</li>
+                                <li onclick="triggerMenuAction('면바지')">면바지</li>
+                                <li onclick="triggerMenuAction('트레이닝웨어')">트레이닝웨어</li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- 악세서리 카테고리 -->
+                    <li class="menu-item">
+                        <a href="#">악세서리</a>
+                        <div class="submenu-container">
+                            <ul class="submenu-list">
+                                <li onclick="triggerMenuAction('목걸이/팔찌')">목걸이/팔찌</li>
+                                <li onclick="triggerMenuAction('반지/귀걸이')">반지/귀걸이</li>
+                                <li onclick="triggerMenuAction('모자/벨트')">모자/벨트</li>
+                                <li onclick="triggerMenuAction('양말/기타')">양말/기타</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 메인 슬라이드 및 하단 카드 그리드 영역 -->
+    <main>
+        <!-- 오토 이미지 슬라이더 -->
+        <div class="slider-wrapper">
+            <!-- 별마당 도서관 테마 메인 슬라이드 -->
+            <div class="slide-item active" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=80');">
+                <div class="slide-title-box">
+                    <h2>별마당도서관</h2>
+                </div>
+                <div class="event-badge-btn" onclick="openEventModal()">
+                    <span>이달의 쇼핑 이벤트</span>
+                    <div class="event-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 신제품 특가전 슬라이드 -->
+            <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80');">
+                <div style="position: absolute; top: 40%; left: 8%; color: white; z-index: 10;">
+                    <span style="background: #0047FF; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 12px;">NEW DEALS</span>
+                    <h2 style="font-size: 40px; font-weight: 900; margin-top: 8px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">2026 S/S 시즌 기획전</h2>
+                </div>
+            </div>
+
+            <!-- 멤버십 혜택 슬라이드 -->
+            <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80');">
+                <div style="position: absolute; top: 40%; right: 8%; text-align: right; color: white; z-index: 10;">
+                    <span style="background: #FF7B6B; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 12px;">BENEFIT</span>
+                    <h2 style="font-size: 40px; font-weight: 900; margin-top: 8px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">신규회원 즉시할인 쿠폰</h2>
+                </div>
+            </div>
+
+            <!-- 슬라이드 제어 버튼 -->
+            <button class="slide-arrow arrow-left" onclick="prevSlide();">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slide-arrow arrow-right" onclick="nextSlide();">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <!-- 슬라이드 하단 인디케이터 도트 -->
+            <div class="slide-dots">
+                <span class="dot active" onclick="setSlide(0)"></span>
+                <span class="dot" onclick="setSlide(1)"></span>
+                <span class="dot" onclick="setSlide(2)"></span>
+            </div>
+        </div>
+
+        <!-- 카드 그리드 영역 -->
+        <div class="content-grid">
+            <!-- 탭형 공지사항 & 갤러리 카드 -->
+            <div class="content-card">
+                <div class="tab-header">
+                    <button id="notice-btn" class="tab-button active" onclick="switchTab('notice')">공지사항</button>
+                    <button id="gallery-btn" class="tab-button inactive" onclick="switchTab('gallery')">갤러리</button>
+                </div>
+
+                <!-- 공지사항 리스트 콘텐츠 -->
+                <div id="notice-content" class="tab-content">
+                    <ul class="notice-list">
+                        <li class="notice-item" onclick="openNoticeDetail(1)">
+                            <span class="notice-title">
+                                <i class="fas fa-bullhorn" style="color:#FF7B6B; margin-right:8px;"></i>신규회원 대상 할인 이벤트 안내
+                            </span>
+                            <span class="notice-date">2020.11.23</span>
+                        </li>
+                        <li class="notice-item" onclick="openNoticeDetail(2)">
+                            <span class="notice-title">
+                                <i class="fas fa-gift" style="color:#FF7B6B; margin-right:8px;"></i>S/S 시즌 신규 의류 신상품 안내
+                            </span>
+                            <span class="notice-date">2020.11.23</span>
+                        </li>
+                        <li class="notice-item" onclick="openNoticeDetail(3)">
+                            <span class="notice-title">
+                                <i class="fas fa-info-circle" style="color:#FF7B6B; margin-right:8px;"></i>반품/환불 규정에 대해 알려드립니다
+                            </span>
+                            <span class="notice-date">2020.11.23</span>
+                        </li>
+                        <li class="notice-item" onclick="openNoticeDetail(4)">
+                            <span class="notice-title">
+                                <i class="fas fa-check-circle" style="color:#FF7B6B; margin-right:8px;"></i>3월 재입고 품목을 알려드립니다
+                            </span>
+                            <span class="notice-date">2020.11.23</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 갤러리 리스트 콘텐츠 -->
+                <div id="gallery-content" class="tab-content hidden">
+                    <div class="gallery-grid">
+                        <div class="gallery-box" onclick="playUIAudio('success')">
+                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=150&q=80" alt="패션 코디 상품 1" class="gallery-img">
+                        </div>
+                        <div class="gallery-box" onclick="playUIAudio('success')">
+                            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=150&q=80" alt="패션 코디 상품 2" class="gallery-img">
+                        </div>
+                        <div class="gallery-box" onclick="playUIAudio('success')">
+                            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=150&q=80" alt="패션 코디 상품 3" class="gallery-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시부야 감성 배너 영역 -->
+            <div class="image-banner" style="background-image: url('https://images.unsplash.com/photo-1540959733332-eab4deceeaf7?auto=format&fit=crop&w=500&q=80');">
+                <div class="banner-btn-wrap">
+                    <button class="action-button" onclick="showPopupModal('기획 프로모션', '현재 전 지점에서 주말 및 공휴일 한정 패션 전품목 특별 20% 마일리지 적립 이벤트가 진행 중입니다.')">
+                        <span>배너 바로보기</span>
+                        <i class="fas fa-bullhorn"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 레스토랑 네온 OPEN 감성 바로가기 영역 -->
+            <div class="image-banner" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80');">
+                <div class="banner-btn-wrap">
+                    <button class="action-button" onclick="showPopupModal('바로가기 링크', '고객 만족 및 실시간 1:1 라이브 쇼핑 피드 채널로 바로 이동합니다.')">
+                        <span>바로가기</span>
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 영역 -->
+    <footer>
+        <div class="footer-container">
+            <!-- 모노톤 푸터 로고 -->
+            <div class="footer-logo">
+                <span class="f-logo-just">Just</span>
+                <span class="f-logo-mall">쇼핑몰</span>
+            </div>
+
+            <!-- 카피라이트 표기 -->
+            <div class="copyright">
+                COPYRIGHT© by BARUNWEBDESIGN. ALL RIGHTS RESERVED.
+            </div>
+
+            <!-- SNS 아이콘 채널 링크 -->
+            <div class="sns-wrap">
+                <a href="#" class="sns-btn sns-fb" onclick="playUIAudio('click')">
+                    <i class="fab fa-facebook-f" style="color:white; font-size:16px;"></i>
+                </a>
+                <a href="#" class="sns-btn sns-tw" onclick="playUIAudio('click')">
+                    <i class="fab fa-twitter" style="color:white; font-size:16px;"></i>
+                </a>
+                <a href="#" class="sns-btn sns-ig" onclick="playUIAudio('click')">
+                    <i class="fab fa-instagram" style="color:white; font-size:16px;"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 글래스모피즘 알림 팝업 모달 구조 -->
+    <div id="popup-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-title-text" class="modal-title">
+                    <i class="fas fa-info-circle" style="color:#FF7B6B;"></i> 알림
+                </h3>
+                <button class="modal-close" onclick="closePopupModal()">&times;</button>
+            </div>
+            <div id="modal-body-text" class="modal-body">
+                알림 메세지 영역입니다.
+            </div>
+            <div class="modal-footer">
+                <button class="modal-confirm-btn" onclick="closePopupModal()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+      [로컬 환경 분할 가이드 - JAVASCRIPT]
+      아래 <script> 태그 안의 순수 자바스크립트 소스코드만 복사하여 'script.js' 파일로 저장하세요.
+      저장 후 이 index.html 최하단 </body> 직전에 <script src="script.js"></script> 를 불러오고
+      현재의 <script>~</script> 블록은 완전히 삭제하시면 됩니다.
+    -->
+    <script>
+        // 1. 네이티브 오디오 컨텍스트 피드백 생성 기능
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playUIAudio(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.1);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // 도 (C5)
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // 미 (E5)
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.2);
+                }
+            } catch (e) {
+                console.log("Audio feedback pending interaction.");
+            }
+        }
+
+        // 2. 메인 오토 이미지 슬라이더 제어 로직
+        let activeIdx = 0;
+        const slideItems = document.querySelectorAll('.slide-item');
+        const dotItems = document.querySelectorAll('.dot');
+        let slideTimer = null;
+
+        function updateSlideDisplay(targetIndex) {
+            slideItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if (dotItems[index]) {
+                    dotItems[index].classList.remove('active');
+                }
+            });
+            slideItems[targetIndex].classList.add('active');
+            if (dotItems[targetIndex]) {
+                dotItems[targetIndex].classList.add('active');
+            }
+            activeIdx = targetIndex;
+        }
+
+        function nextSlide() {
+            let nextIdx = (activeIdx + 1) % slideItems.length;
+            updateSlideDisplay(nextIdx);
+        }
+
+        function prevSlide() {
+            let prevIdx = (activeIdx - 1 + slideItems.length) % slideItems.length;
+            updateSlideDisplay(prevIdx);
+        }
+
+        function setSlide(index) {
+            playUIAudio('click');
+            updateSlideDisplay(index);
+            restartSlideTimer();
+        }
+
+        function startSlideTimer() {
+            slideTimer = setInterval(nextSlide, 3500);
+        }
+
+        function restartSlideTimer() {
+            clearInterval(slideTimer);
+            startSlideTimer();
+        }
+
+        // 3. 서브 카테고리 클릭 모달 얼럿
+        function triggerMenuAction(itemName) {
+            playUIAudio('success');
+            showPopupModal('카테고리 이동', `${itemName} 기획전 카테고리로 안전하게 이동합니다.`);
+        }
+
+        // 4. 공지사항 / 갤러리 탭 전환 제어
+        function switchTab(tabName) {
+            playUIAudio('click');
+            const noticeBtn = document.getElementById('notice-btn');
+            const galleryBtn = document.getElementById('gallery-btn');
+            const noticeContent = document.getElementById('notice-content');
+            const galleryContent = document.getElementById('gallery-content');
+
+            if (tabName === 'notice') {
+                noticeBtn.className = 'tab-button active';
+                galleryBtn.className = 'tab-button inactive';
+                noticeContent.classList.remove('hidden');
+                galleryContent.classList.add('hidden');
+            } else {
+                noticeBtn.className = 'tab-button inactive';
+                galleryBtn.className = 'tab-button active';
+                noticeContent.classList.add('hidden');
+                galleryContent.classList.remove('hidden');
+            }
+        }
+
+        // 5. 공지사항 모달 오픈용 구조 데이터
+        const noticeDatabase = {
+            1: {
+                title: "신규회원 대상 할인 이벤트 안내",
+                body: "Just쇼핑몰에 오신 것을 기쁘게 환영합니다!\n\n가입 완료 즉시 첫 쇼핑에 한해 10% 추가 할인을 누릴 수 있는 특별 웰컴 쿠폰이 지갑에 쿠폰함으로 발송 완료되었습니다.\n\n장바구니 결제 진행 시 잊지 마시고 자동 혜택 적용을 설정해 보세요."
+            },
+            2: {
+                title: "S/S 시즌 신규 의류 신상품 안내",
+                body: "완연한 봄, 여름 트렌디 룩북 제안!\n\n이번 S/S 에디션은 통기성이 훌륭한 린넨 셔츠와 파스텔 톤의 아우터 및 슬랙스 스타일링으로 구성되었습니다.\n\n상단 네비게이션 서브메뉴를 클릭하여 화사한 신상품을 선점해 보시길 권장합니다."
+            },
+            3: {
+                title: "반품/환불 규정에 대해 알려드립니다",
+                body: "고객님의 안전한 안심 쇼핑 보장 제도 안내입니다.\n\n1. 수령 후 단순 변심 건은 7일 이내에 미착용 및 텍 손상 없는 원래 그대로 복구되었을 때 무료 접수 가능합니다.\n2. 훼손 및 오염 흔적이 확인될 경우 정상 취소가 지연될 수 있는 점 양해 부탁드립니다."
+            },
+            4: {
+                title: "3월 재입고 품목을 알려드립니다",
+                body: "품절 대란을 빚었던 셔츠 및 와이드 핏 카고 팬츠 전량이 보강 완료되었습니다.\n\n입고 대기 예약 문자를 신청하신 주소지로 알림 문자 전송을 순차 발송하였으며, 금일부터 정상 주문서 결제가 가능합니다."
+            }
+        };
+
+        function openNoticeDetail(id) {
+            playUIAudio('success');
+            const notice = noticeDatabase[id];
+            showPopupModal(notice.title, notice.body);
+        }
+
+        function openEventModal() {
+            playUIAudio('success');
+            showPopupModal('이달의 쇼핑 이벤트', '별마당도서관 입점 제휴 프로모션!\n\n코엑스 별마당도서관 지점 패션 테마 샵에서 주말 기간 동안 본 모바일 쿠폰 스크린샷을 제시해 주시는 분들께 에코 웰컴백 사은품을 선착순으로 증정해 드립니다.');
+        }
+
+        // 6. 글래스모피즘 모달 팝업 컨트롤러
+        function showPopupModal(titleText, bodyText) {
+            const modal = document.getElementById('popup-modal');
+            const mTitle = document.getElementById('modal-title-text');
+            const mBody = document.getElementById('modal-body-text');
+
+            mTitle.innerHTML = `<i class="fas fa-info-circle" style="color:#FF7B6B;"></i> ${titleText}`;
+            mBody.textContent = bodyText;
+
+            modal.classList.add('show');
+        }
+
+        function closePopupModal() {
+            playUIAudio('click');
+            const modal = document.getElementById('popup-modal');
+            modal.classList.remove('show');
+        }
+
+        // 페이지 로드 시 타이머 개시
+        window.onload = function() {
+            startSlideTimer();
+        };
+    </script>
+</body>
+</html>
