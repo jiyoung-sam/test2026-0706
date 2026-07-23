@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>정지영 교수 | Portfolio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#08111f;color:#eef4ff;line-height:1.6}
+header{min-height:100vh;display:flex;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#0b1730,#1d4ed8,#0ea5e9);text-align:center;padding:30px}
+.hero{max-width:900px}
+h1{font-size:clamp(2.5rem,6vw,5rem)}
+h2{margin:10px 0 25px;font-weight:400;color:#d9e7ff}
+.btn{display:inline-block;margin-top:20px;padding:14px 26px;border-radius:30px;
+background:#fff;color:#0b4cc2;text-decoration:none;font-weight:bold}
+section{max-width:1100px;margin:auto;padding:70px 20px}
+.title{font-size:2rem;margin-bottom:25px;border-left:6px solid #38bdf8;padding-left:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:#13233e;border:1px solid #28456b;border-radius:18px;padding:22px;
+transition:.3s}
+.card:hover{transform:translateY(-8px)}
+.skill{display:inline-block;background:#1d4ed8;padding:8px 14px;border-radius:999px;margin:6px}
+footer{text-align:center;padding:40px;background:#06101c;color:#b8c6df}
+</style>
+</head>
+<body>
+<header>
+<div class="hero">
+<h1>정지영 교수</h1>
+<h2>Advertising Design Professor<br>Branding · AI Contents · Creative Education</h2>
+<p>광고디자인, 브랜딩, 생성형 AI, 웹디자인, 3D 콘텐츠를 교육하며 학생들이 실무 중심의 디자인 역량을 기를 수 있도록 돕고 있습니다.</p>
+<a class="btn" href="#about">더 알아보기</a>
+</div>
+</header>
+
+<section id="about">
+<h3 class="title">About Me</h3>
+<p>광고디자인과 교수로서 브랜딩, 광고디자인, AI 기반 콘텐츠 제작, 디자인 교육을 연구하고 있습니다. Figma, Blender, HTML/CSS/JavaScript, Canva 등 다양한 도구를 활용하여 실무 중심의 교육을 진행합니다.</p>
+</section>
+
+<section>
+<h3 class="title">전문 분야</h3>
+<div class="grid">
+<div class="card"><h4>브랜딩</h4><p>브랜드 전략과 로고, 아이덴티티 설계</p></div>
+<div class="card"><h4>광고디자인</h4><p>포스터, 카드뉴스, 홍보 콘텐츠 제작</p></div>
+<div class="card"><h4>AI 콘텐츠</h4><p>생성형 AI 기반 이미지·영상 제작</p></div>
+<div class="card"><h4>웹디자인</h4><p>HTML/CSS/JavaScript 기반 UI 제작</p></div>
+</div>
+</section>
+
+<section>
+<h3 class="title">Skills</h3>
+<div>
+<span class="skill">Figma</span>
+<span class="skill">Photoshop</span>
+<span class="skill">Illustrator</span>
+<span class="skill">Blender</span>
+<span class="skill">Canva</span>
+<span class="skill">HTML</span>
+<span class="skill">CSS</span>
+<span class="skill">JavaScript</span>
+<span class="skill">Premiere Pro</span>
+<span class="skill">AI Tools</span>
+</div>
+</section>
+
+<section>
+<h3 class="title">교육 철학</h3>
+<div class="grid">
+<div class="card"><h4>실무 중심</h4><p>현업에서 활용 가능한 프로젝트 기반 수업</p></div>
+<div class="card"><h4>AI 활용</h4><p>생성형 AI를 디자인 워크플로우에 적극 도입</p></div>
+<div class="card"><h4>창의성</h4><p>기술과 디자인를 연결하는 교육</p></div>
+</div>
+</section>
+
+<footer>
+<p><strong>정지영 교수</strong></p>
+<p>Advertising Design · AI Education · Branding</p>
+<p>© 2026 Portfolio</p>
+</footer>
+<script>
+document.querySelectorAll('.card').forEach(c=>{
+ c.addEventListener('mousemove',e=>{
+  const r=c.getBoundingClientRect();
+  c.style.transform=`perspective(700px) rotateX(${-(e.clientY-r.top-r.height/2)/25}deg) rotateY(${(e.clientX-r.left-r.width/2)/25}deg)`;
+ });
+ c.addEventListener('mouseleave',()=>c.style.transform='translateY(-8px)');
+});
+</script>
+</body>
+</html>
